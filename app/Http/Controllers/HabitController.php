@@ -12,47 +12,35 @@ class HabitController extends Controller
 {
     public function index(Request $request)
     {
-        // optional search query
-        $q = $request->input('q');
+        $q = $request->get('q');
 
-        // base query for current user's habits
-        $query = Habit::whereBelongsTo(auth()->user());
+        $query = Habit::where('user_id', auth()->id())
+            ->withCount(['tasks', 'tasks as completed_tasks_count' => function ($query) {
+                $query->where('is_complete', true);
+            }]);
 
         if ($q) {
-            $query->where(function ($s) use ($q) {
-                $s->where('title', 'like', "%{$q}%")
-                  ->orWhere('description', 'like', "%{$q}%");
+            $query->where(function ($sub) use ($q) {
+                $sub->where('title', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%");
             });
         }
-        
-        // eager-load task counts (total and completed) to avoid N+1
-        $habits = $query->withCount([
-            'tasks',
-            'tasks as completed_tasks_count' => function ($q) {
-                $q->where('is_complete', true);
-            }
-        ])->get();
 
-        // compute stats based on filtered habits
+        $habits = $query->get();
+
+        // aggregate stats
         $totalHabits = $habits->count();
         $totalTasks = $habits->sum('tasks_count');
         $completedTasks = $habits->sum('completed_tasks_count');
         $completionRate = $totalTasks ? (int) round($completedTasks / $totalTasks * 100) : 0;
 
-        // compute per-habit consistency scaled to 0..10
-        foreach ($habits as $habit) {
-            $total = $habit->tasks_count;
-            $completed = $habit->completed_tasks_count;
-            $habit->consistency = $total ? (int) round($completed / $total * 10) : null;
-        }
+        // per-habit consistency score 0-10
+        $habits->transform(function ($habit) {
+            $habit->consistency = $habit->tasks_count ? (int) round(($habit->completed_tasks_count / $habit->tasks_count) * 10) : null;
+            return $habit;
+        });
 
-        return view('habits.index', [
-            'habits' => $habits,
-            'totalHabits' => $totalHabits,
-            'totalTasks' => $totalTasks,
-            'completedTasks' => $completedTasks,
-            'completionRate' => $completionRate,
-        ]);
+        return view('habits.index', compact('habits', 'totalHabits', 'totalTasks', 'completedTasks', 'completionRate'));
     }
 
     public function create()

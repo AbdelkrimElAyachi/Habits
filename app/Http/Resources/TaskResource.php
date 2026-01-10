@@ -19,6 +19,7 @@ class TaskResource extends JsonResource
             'body' => $this->body,
             'is_complete' => $this->is_complete,
             'habit_id' => $this->habit_id,
+            'time' => $this->time?->format('H:i') ?? null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

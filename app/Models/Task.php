@@ -15,6 +15,7 @@ class Task extends Model
 
     protected $casts = [
         'is_complete' => 'boolean',
+        'time' => 'datetime:H:i',
     ];
 
     public function habit(): BelongsTo

@@ -20,6 +20,7 @@ class TaskFactory extends Factory
             'body' => $this->faker->sentence(),
             'habit_id' => rand(1, 10),
             'is_complete' => rand(0, 1),
+            'time' => $this->faker->time('H:i:s'),
         ];
     }
 }

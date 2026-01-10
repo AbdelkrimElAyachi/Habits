@@ -16,10 +16,12 @@ class HabitTaskController extends Controller
 
         // validate
         $request->validate([
-            'body' => 'required|string'
+            'body' => 'required|string',
+            'time' => 'nullable|date_format:H:i',
         ]);
+
         // add task
-        $habit->tasks()->create(['body' => $request->body]);
+        $habit->tasks()->create(['body' => $request->body, 'time' => $request->time]);
 
         return redirect()->route('habits.show', $habit->id);
     }
@@ -29,6 +31,13 @@ class HabitTaskController extends Controller
          // authorize
          $this->authorize('manage', $habit);
 
+        // validate incoming data (allow null body for delete behavior)
+        $request->validate([
+            'body' => 'nullable|string',
+            'time' => 'nullable|date_format:H:i',
+            'is_complete' => 'sometimes|boolean',
+        ]);
+
         // if body has no text, delete task
         if(!$request->body || strlen($request->body) === 0) {
             $task->delete();
@@ -36,23 +45,33 @@ class HabitTaskController extends Controller
             return redirect()->route('habits.show', $habit->id);
         }
 
-        // update and save activity only if the previous state and current state aren't the same
+        // collect changed fields (handle time change even if body didn't change)
+        $updates = [];
+
         if($request->body !== $task->body) {
-            // update if there is body,
-            $task->update([
-                'body' => $request->body
-            ]);
+            $updates['body'] = $request->body;
+        }
+
+        if($request->has('time')) {
+            $existingTime = $task->time ? $task->time->format('H:i') : null;
+            if($existingTime !== $request->time) {
+                $updates['time'] = $request->time;
+            }
+        }
+
+        if(! empty($updates)) {
+            $task->update($updates);
 
             // track activity
             $task->trackActivity('updated_task');
 
-            return response()->json(['message' => 'task updated'], status:200);
+            return response()->json(['message' => 'task updated'], 200);
         }
 
         // complete or incomplete task
         $this->completeOrIncomplete($request, $task);
 
-        return response()->json(['message' => 'task updated'], status:200);
+        return response()->json(['message' => 'task updated'], 200);
 
     }
 

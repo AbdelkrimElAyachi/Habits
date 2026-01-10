@@ -74,8 +74,17 @@
                     <div class="h-full bg-[#36B37E] shadow-[0_0_10px_#36B37E]"
                         style="width: {{ $completionRate ?? 0 }}%"></div>
                 </div>
-                <p class="mt-3 text-[11px] text-[#A5ADBA] font-medium leading-tight">Great job! You're above your weekly
-                    average.</p>
+                <p class="mt-3 text-[11px] text-[#A5ADBA] font-medium leading-relaxed tracking-wide">
+                    @if ($completionRate >= 100)
+                        Excellent! You've hit your peak performance. 🚀
+                    @elseif($completionRate >= 80)
+                        Great job! You're above your weekly average.
+                    @elseif($completionRate >= 50)
+                        You're doing well, but there's room to grow.
+                    @else
+                        Keep going! Every small step counts today.
+                    @endif
+                </p>
             </div>
         </div>
     </div>
