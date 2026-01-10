@@ -1,0 +1,153 @@
+/* Base */
+
+body,
+body *:not(html):not(style):not(br):not(tr):not(code) {
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    position: relative;
+}
+
+body {
+    -webkit-text-size-adjust: none;
+    background-color: #F4F5F7; /* Light SaaS Gray Background */
+    color: #42526E; /* Muted SaaS Text */
+    height: 100%;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    width: 100% !important;
+}
+
+p,
+ul,
+ol,
+blockquote {
+    line-height: 1.6;
+    text-align: left;
+    color: #42526E;
+}
+
+a {
+    color: #0052CC; /* SaaS Link Blue */
+}
+
+/* Typography */
+
+h1 {
+    color: #172B4D; /* Dark Navy Header */
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: left;
+    letter-spacing: -0.01em;
+}
+
+h2 {
+    color: #172B4D;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+p {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Layout */
+
+.wrapper {
+    background-color: #F4F5F7;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+/* Header & Spacing Fix */
+
+.header {
+    padding: 40px 0;
+    text-align: center;
+}
+
+.header a {
+    color: #172B4D;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+    /* Fixing the cramped word spacing here */
+    letter-spacing: 0.2em; 
+}
+
+/* Body / The Card */
+
+.body {
+    background-color: #F4F5F7;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.inner-body {
+    background-color: #ffffff;
+    border-color: #DFE1E6; /* Subtle Border */
+    border-radius: 8px; /* Softer Corners */
+    border-width: 1px;
+    box-shadow: 0 4px 6px rgba(9, 30, 66, 0.08); /* SaaS Shadow */
+    margin: 0 auto;
+    padding: 0;
+    width: 570px;
+}
+
+/* Buttons */
+
+.button-primary {
+    background-color: #0052CC; /* Atlassian Blue */
+    border-top: 12px solid #0052CC;
+    border-right: 24px solid #0052CC;
+    border-bottom: 12px solid #0052CC;
+    border-left: 24px solid #0052CC;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Subcopy & Footer */
+
+.subcopy {
+    border-top: 1px solid #DFE1E6;
+    margin-top: 25px;
+    padding-top: 25px;
+}
+
+.subcopy p {
+    font-size: 12px;
+    color: #6B778C;
+}
+
+.footer {
+    padding: 32px 0;
+    text-align: center;
+    width: 570px;
+}
+
+.footer p {
+    color: #6B778C;
+    font-size: 12px;
+}
+
+/* Success/Error Variants */
+
+.button-success {
+    background-color: #36B37E;
+    border-color: #36B37E;
+}
+
+.button-error {
+    background-color: #FF5630;
+    border-color: #FF5630;
+}

@@ -12,8 +12,22 @@ class HabitController extends Controller
 {
     public function index()
     {
+        // fetch user's habits
+        $habits = Habit::whereBelongsTo(auth()->user())->get();
+
+        // compute stats
+        $habitIds = $habits->pluck('id')->toArray();
+        $totalHabits = $habits->count();
+        $totalTasks = \App\Models\Task::whereIn('habit_id', $habitIds)->count();
+        $completedTasks = \App\Models\Task::whereIn('habit_id', $habitIds)->where('is_complete', true)->count();
+        $completionRate = $totalTasks ? (int) round($completedTasks / $totalTasks * 100) : 0;
+
         return view('habits.index', [
-            'habits' => Habit::whereBelongsTo(auth()->user())->get(),
+            'habits' => $habits,
+            'totalHabits' => $totalHabits,
+            'totalTasks' => $totalTasks,
+            'completedTasks' => $completedTasks,
+            'completionRate' => $completionRate,
         ]);
     }
 
