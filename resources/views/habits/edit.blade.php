@@ -1,75 +1,60 @@
 <x-app-layout>
-    <div class="p-3 max-w-3xl mx-auto">
-        <form
-            action="{{ route('habits.update', $habit->id) }}"
-            method="POST"
-            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-black dark:text-white"
-        >
-            <h2 class="mb-3 text-xl text-center">Edit</h2>
-            <hr class="mb-3">
-            @method('PATCH')
-            @csrf
+    <div class="max-w-3xl mx-auto py-8 px-4">
 
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400 sr-only" for="title">
-                 Title For the Habit
-                </label>
-                <input
-                        class="shadow appearance-none border
-                        focus:border-blue-400 duration-200
-                        rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline
-                        dark:bg-black
-                        dark:text-white
-                        @error('title')
-                        border-red-500
-                        @enderror"
-                        value="{{ old('title', $habit->title) }}"
-                        id="title"
-                        type="text"
-                        name="title"
-                        placeholder="e.g Read books every night, Walk 100m every morning, etc...">
+        <nav class="mb-6">
+            <a href="{{ route('habits.show', $habit->id) }}"
+                class="text-sm font-medium text-[#5E6C84] hover:text-[#0052CC] flex items-center transition-colors">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Habit Details
+            </a>
+        </nav>
 
-                @error('title')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
+        <div class="bg-white border border-[#DFE1E6] rounded-lg shadow-sm overflow-hidden">
+            <div class="px-8 py-6 border-b border-[#DFE1E6] bg-[#FAFBFC]">
+                <h2 class="text-xl font-bold text-[#172B4D]">Edit Habit</h2>
+                <p class="text-sm text-[#5E6C84] mt-1">Refine your goals or update the description of your routine.</p>
             </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-400 sr-only" for="description">
-                Description
-            </label>
-            <textarea
-                name="description"
-                class="shadow appearance-none border
-                dark:bg-black
-                dark:text-white
-                @error('description')
-                border-red-500
-                @enderror
-                rounded w-full px-3 text-gray-700 leading-tight
-                focus:outline-none py-2 focus:border focus:border-blue-400 duration-200 focus:shadow-outline" id="" cols="30" rows="4"
-                >{{old('description', $habit->description)}}</textarea>
+            <form action="{{ route('habits.update', $habit->id) }}" method="POST" class="p-8 space-y-8">
+                @csrf
+                @method('PATCH')
 
-            @error('description')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-            @enderror
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#42526E] uppercase tracking-wide" for="title">
+                        Habit Title
+                    </label>
+                    <input type="text" name="title" id="title" value="{{ old('title', $habit->title) }}"
+                        class="w-full px-4 py-3 bg-[#F4F5F7] border-2 border-[#DFE1E6] rounded-md focus:bg-white focus:border-[#4C9AFF] focus:ring-0 transition-all text-sm outline-none text-[#172B4D] @error('title') border-red-500 @enderror">
+                    @error('title')
+                        <p class="text-[#DE350B] text-xs font-semibold mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#42526E] uppercase tracking-wide" for="description">
+                        Description & Motivation
+                    </label>
+                    <textarea name="description" id="description" rows="4"
+                        class="w-full px-4 py-3 bg-[#F4F5F7] border-2 border-[#DFE1E6] rounded-md focus:bg-white focus:border-[#4C9AFF] focus:ring-0 transition-all text-sm outline-none text-[#172B4D] @error('description') border-red-500 @enderror">{{ old('description', $habit->description) }}</textarea>
+                    @error('description')
+                        <p class="text-[#DE350B] text-xs font-semibold mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-6 border-t border-[#F4F5F7]">
+                    <a href="{{ route('habits.show', $habit->id) }}"
+                        class="px-4 py-2 text-sm font-semibold text-[#42526E] hover:bg-[#EBECF0] rounded-md transition-colors">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                        class="bg-[#0052CC] hover:bg-[#0747A6] text-white px-6 py-2 rounded-md text-sm font-bold transition shadow-sm shadow-blue-500/20">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
-
-        <div class="flex items-center justify-between">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Update
-            </button>
-
-            <a
-                href="{{ route('habits.show', $habit->id) }}"
-                class="bg-white text-black border border-gray-300 font-bold py-2
-                px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-                Cancel
-            </a>
-
-        </div>
-
-        </form>
     </div>
 </x-app-layout>

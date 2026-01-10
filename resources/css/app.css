@@ -2,9 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+:root{
+  --accent:#0052FF;
+  --accent-2:#4D7CFF;
+  --bg:#FAFAFA;
+  --fg:#0F172A;
+  --muted:#64748B;
+  --border:#E2E8F0;
+  --card:#FFFFFF;
+  --ring:#0052FF;
+}
+
+@layer base {
+  html, body { background-color: var(--bg); color: var(--fg); }
+  body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+  h1,h2,h3,h4 { font-family: Calistoga, Georgia, serif; }
+}
 
 @layer components {
-    .card {
-        @apply p-3 bg-white shadow-md rounded-md dark:bg-black dark:text-white;
-    }
+  /* Card */
+  .card {
+    @apply bg-white border rounded-xl shadow-md p-6;
+    border-color: var(--border);
+  }
+
+  /* Primary button (gradient) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-5 py-3 rounded-xl text-white font-semibold shadow-sm transition-transform duration-200;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    box-shadow: 0 6px 18px rgba(77,124,255,0.08);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(77,124,255,0.12); }
+  .btn-primary:active { transform: scale(0.99); }
+
+  /* Outline / secondary */
+  .btn-outline {
+    @apply inline-flex items-center px-4 py-2 rounded-md border text-gray-700 bg-white transition-colors duration-150;
+    border-color: var(--border);
+  }
+  .btn-outline:hover { border-color: rgba(0,82,255,0.12); }
+
+  /* Danger */
+  .btn-danger {
+    @apply inline-flex items-center px-4 py-2 rounded-md text-white font-semibold transition-colors duration-150;
+    background-color: #ef4444; /* red-500 */
+  }
+  .btn-danger:hover { background-color: #dc2626; }
+
+  /* Inputs */
+  .input {
+    @apply block w-full rounded-lg border px-3 py-2 bg-white text-gray-900;
+    border-color: var(--border);
+  }
+  .input:focus { box-shadow: 0 0 0 4px rgba(0,82,255,0.06); border-color: var(--ring); outline: none; }
+
+  .muted { color: var(--muted); }
+
+  .section-badge {
+    @apply inline-flex items-center gap-3 rounded-full px-4 py-1 border text-xs font-mono uppercase tracking-widest;
+    border-color: rgba(0,82,255,0.12);
+    color: var(--accent);
+    background-color: rgba(77,124,255,0.04);
+  }
+}
+
+@layer utilities {
+  .gradient-text { background: linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 }

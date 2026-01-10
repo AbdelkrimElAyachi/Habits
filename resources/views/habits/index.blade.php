@@ -1,47 +1,71 @@
 <x-app-layout>
-    <header class="shadow">
-        <div class="flex justify-between mb-3 bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
-            <h5 class="text-gray-500 dark:text-gray-400">
-                Planned
-            </h5>
-            <a
-                href="{{ route('habits.create') }}"
-                class="px-2 py-1 bg-blue-400 text-white rounded-md ease hover:opacity-100 opacity-80 duration-300 dark:opacity-100"
-            >
-                Track a new habit
+    <div class="mb-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-[#172B4D]">My Habits</h1>
+                <p class="text-sm text-[#5E6C84]">Track and manage your daily routines.</p>
+            </div>
+            <a href="{{ route('habits.create') }}"
+                class="bg-[#0052CC] hover:bg-[#0747A6] text-white px-4 py-2 rounded-md text-sm font-semibold transition shadow-sm">
+                + Create Habit
             </a>
         </div>
-    </header>
-        {{-- flash message --}}
-        @if (session('status'))
-        <div id="flash-message" class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-200 dark:bg-gray-800 dark:text-blue-400" role="alert">
-                {{ session('status') }}
-          </div>
-        @endif
+    </div>
 
-    <div class="flex items-center flex-wrap gap-4">
+    @if (session('status'))
+        <div id="flash-message"
+            class="flex items-center p-4 mb-6 text-sm text-[#0052CC] bg-[#DEEBFF] border border-[#B3D4FF] rounded-md"
+            role="alert">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+            </svg>
+            {{ session('status') }}
+        </div>
+    @endif
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($habits as $habit)
-            <div class="card md:w-[300px] md:h-52 relative">
-                    <h3 class="text-xl -ml-3 border-l-[4px] pl-3 border-l-blue-400 font-semibold pb-4">
-                            <a href="{{ route('habits.show', $habit->id) }}" class="hover:underline duration-150">{{ $habit->title }}</a>
-                    </h3>
-                <div class="text-sm text-gray-600 leading-7 dark:text-gray-400">
-                    {{ Str::limit($habit->description) }}
+            <div
+                class="bg-white border border-[#DFE1E6] rounded-lg p-5 hover:border-[#4C9AFF] transition-colors group relative flex flex-col h-full">
+                <div class="mb-4">
+                    <div class="flex items-start justify-between">
+                        <h3 class="text-lg font-bold text-[#172B4D]">
+                            <a href="{{ route('habits.show', $habit->id) }}"
+                                class="hover:text-[#0052CC] transition-colors">
+                                {{ $habit->title }}
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="h-1 w-12 bg-[#4C9AFF] rounded-full mt-1.5"></div>
                 </div>
 
-                <div class="block text-right absolute bottom-2 right-2">
-                    <button
-                        class="text-sm text-red-500 p-3"
-                        id="delete-btn"
-                        data-habit="{{ json_encode($habit->only(['id', 'title'])) }}"
-                    >
+                <div class="text-sm text-[#42526E] leading-relaxed flex-grow mb-6">
+                    {{ Str::limit($habit->description, 100) }}
+                </div>
+
+                <div class="flex items-center justify-between mt-auto pt-4 border-t border-[#F4F5F7]">
+                    <span class="text-[10px] uppercase font-bold text-[#6B778C] tracking-widest">Active Habit</span>
+
+                    <button class="text-xs text-[#EB5757] hover:bg-[#FFEBE6] px-2 py-1 rounded transition-colors"
+                        id="delete-btn" data-habit="{{ json_encode($habit->only(['id', 'title'])) }}">
                         Delete
                     </button>
                 </div>
             </div>
         @empty
-            <div class="mx-auto text-gray-600">There is no habit to track at the moment. Please
-                <a href="{{ route('habits.create') }}" class="text-blue-500 hover:underline">create one</a>
+            <div class="col-span-full py-20 text-center bg-white border-2 border-dashed border-[#DFE1E6] rounded-xl">
+                <div class="w-16 h-16 bg-[#F4F5F7] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-[#A5ADBA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-[#172B4D]">No habits yet</h3>
+                <p class="text-[#5E6C84] mb-6">Start building your routine today.</p>
+                <a href="{{ route('habits.create') }}" class="text-[#0052CC] font-bold hover:underline">Track your first
+                    habit →</a>
             </div>
         @endforelse
     </div>

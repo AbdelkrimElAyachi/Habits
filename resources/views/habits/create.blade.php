@@ -1,67 +1,74 @@
 <x-app-layout>
-    <div class="p-3 max-w-3xl mx-auto">
-        <form action="{{ route('habits.store') }}" method="POST" class="bg-white dark:bg-black shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            @csrf
-            <h2 class="text-gray-600 mb-6 pb-2 text-xl border-b border-blue-400">Create a new habit and Track the progress</h2>
+    <div class="max-w-3xl mx-auto py-8 px-4">
 
-            <div class="mb-4">
-                <label class="block text-gray-700 dark:text-gray-400 text-sm font-bold mb-2 sr-only" for="title">
-                Title for your habit
-                </label>
-                <input
-                        class="shadow appearance-none border
-                        focus:border-blue-400 duration-200
-                        rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline
-                        dark:bg-black
-                        dark:text-white
-                        @error('title')
-                        border-red-500
-                        @enderror"
-                        value="{{ old('title') }}"
-                        id="title"
-                        type="text"
-                        name="title"
-                        placeholder="e.g Read books every night, Walk 100m every morning, etc...">
+        <nav class="mb-6">
+            <a href="{{ route('habits.index') }}"
+                class="text-sm font-medium text-[#5E6C84] hover:text-[#0052CC] flex items-center transition-colors">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Dashboard
+            </a>
+        </nav>
 
-                @error('title')
-                    <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
+        <div class="bg-white border border-[#DFE1E6] rounded-lg shadow-sm overflow-hidden">
+            <div class="px-8 py-6 border-b border-[#DFE1E6] bg-[#FAFBFC]">
+                <h2 class="text-xl font-bold text-[#172B4D]">Establish a New Habit</h2>
+                <p class="text-sm text-[#5E6C84] mt-1">Define your goal and start tracking your consistency today.</p>
             </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-400 text-sm font-bold mb-2 sr-only" for="description">
-            Description
-            </label>
-            <textarea
-                name="description"
-                class="shadow appearance-none border
-                dark:bg-black
-                dark:text-white
-                @error('description')
-                border-red-500
-                @enderror
-                rounded w-full px-3 text-gray-700 leading-tight
-                focus:outline-none py-2 focus:border focus:border-blue-400 duration-200 focus:shadow-outline" placeholder="Brief description why you to stick to this habit..." cols="30" rows="4"
-                >{{old('description')}}</textarea>
+            <form action="{{ route('habits.store') }}" method="POST" class="p-8 space-y-8">
+                @csrf
 
-            @error('description')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-            @enderror
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#42526E] uppercase tracking-wide" for="title">
+                        What is your new habit?
+                    </label>
+                    <input type="text" name="title" id="title" value="{{ old('title') }}"
+                        placeholder="e.g. Read for 30 mins, Morning 5km run..."
+                        class="w-full px-4 py-3 bg-[#F4F5F7] border-2 border-[#DFE1E6] rounded-md focus:bg-white focus:border-[#4C9AFF] focus:ring-0 transition-all text-sm outline-none text-[#172B4D] placeholder:text-[#A5ADBA] @error('title') border-red-500 @enderror">
+                    @error('title')
+                        <p class="text-[#DE350B] text-xs font-semibold mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-[#42526E] uppercase tracking-wide" for="description">
+                        Why is this important? (Optional)
+                    </label>
+                    <textarea name="description" id="description" rows="4"
+                        placeholder="Describe your motivation or specific rules for this habit..."
+                        class="w-full px-4 py-3 bg-[#F4F5F7] border-2 border-[#DFE1E6] rounded-md focus:bg-white focus:border-[#4C9AFF] focus:ring-0 transition-all text-sm outline-none text-[#172B4D] placeholder:text-[#A5ADBA] @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                    @error('description')
+                        <p class="text-[#DE350B] text-xs font-semibold mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="flex items-center justify-end space-x-3 pt-6 border-t border-[#F4F5F7]">
+                    <a href="{{ route('habits.index') }}"
+                        class="px-4 py-2 text-sm font-semibold text-[#42526E] hover:bg-[#EBECF0] rounded-md transition-colors">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                        class="bg-[#0052CC] hover:bg-[#0747A6] text-white px-6 py-2 rounded-md text-sm font-bold transition shadow-sm shadow-blue-500/20">
+                        Create Habit
+                    </button>
+                </div>
+            </form>
         </div>
 
-        <div class="flex items-center justify-between">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Create
-            </button>
-
-            <a
-                href="{{ route('habits.index') }}"
-                class="border border-gray-500 text-black dark:text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Cancel
-            </a>
-
+        <div class="mt-8 p-4 bg-[#EAE6FF] border border-[#C0B6F2] rounded-lg flex items-start space-x-3">
+            <svg class="w-5 h-5 text-[#403294] mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM5.884 6.68a1 1 0 101.415-1.414L6.586 4.553a1 1 0 00-1.414 1.414l.712.713zM18 8a1 1 0 00-1-1h-1a1 1 0 100 2h1a1 1 0 001-1zM5 8a1 1 0 00-1-1H3a1 1 0 100 2h1a1 1 0 001-1zM8 11a1 1 0 100-2H7a1 1 0 100 2h1zm2 5a1 1 0 100-2v-1a1 1 0 10-2 0v1a1 1 0 100 2h2zm4.586-11.293a1 1 0 00-1.414 1.414l.713.712a1 1 0 101.414-1.414l-.713-.712z">
+                </path>
+            </svg>
+            <div>
+                <p class="text-xs font-bold text-[#403294] uppercase tracking-wider">Pro Tip</p>
+                <p class="text-sm text-[#403294]">Consistent habits are built by starting small. Focus on one specific
+                    action you can do in under 2 minutes.</p>
+            </div>
         </div>
-
-        </form>
     </div>
 </x-app-layout>
