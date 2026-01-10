@@ -10,23 +10,40 @@ use Illuminate\Support\Facades\Gate;
 
 class HabitController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // fetch user's habits
-        $habits = Habit::whereBelongsTo(auth()->user())->get();
+        // optional search query
+        $q = $request->input('q');
 
-        // compute stats
-        $habitIds = $habits->pluck('id')->toArray();
+        // base query for current user's habits
+        $query = Habit::whereBelongsTo(auth()->user());
+
+        if ($q) {
+            $query->where(function ($s) use ($q) {
+                $s->where('title', 'like', "%{$q}%")
+                  ->orWhere('description', 'like', "%{$q}%");
+            });
+        }
+        
+        // eager-load task counts (total and completed) to avoid N+1
+        $habits = $query->withCount([
+            'tasks',
+            'tasks as completed_tasks_count' => function ($q) {
+                $q->where('is_complete', true);
+            }
+        ])->get();
+
+        // compute stats based on filtered habits
         $totalHabits = $habits->count();
-        $totalTasks = \App\Models\Task::whereIn('habit_id', $habitIds)->count();
-        $completedTasks = \App\Models\Task::whereIn('habit_id', $habitIds)->where('is_complete', true)->count();
+        $totalTasks = $habits->sum('tasks_count');
+        $completedTasks = $habits->sum('completed_tasks_count');
         $completionRate = $totalTasks ? (int) round($completedTasks / $totalTasks * 100) : 0;
 
-        // compute per-habit consistency: scale completed/total to 0..10
+        // compute per-habit consistency scaled to 0..10
         foreach ($habits as $habit) {
-            $total = $habit->tasks()->count();
-            $completed = $habit->tasks()->where('is_complete', true)->count();
-            $habit->consistency = $total ? (int) round($completed / $total * 10) : null; // null when no tasks
+            $total = $habit->tasks_count;
+            $completed = $habit->completed_tasks_count;
+            $habit->consistency = $total ? (int) round($completed / $total * 10) : null;
         }
 
         return view('habits.index', [

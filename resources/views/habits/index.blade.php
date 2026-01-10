@@ -4,13 +4,25 @@
             <h1 class="text-3xl font-extrabold text-[#172B4D]">Dashboard</h1>
             <p class="text-[#5E6C84] mt-1 font-medium">Welcome back! Here is how your routines are looking today.</p>
         </div>
-        <a href="{{ route('habits.create') }}"
-            class="inline-flex items-center justify-center bg-[#0052CC] hover:bg-[#0747A6] text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-            </svg>
-            Create New Habit
-        </a>
+
+        <div class="flex items-center gap-4">
+            <form action="{{ route('habits.index') }}" method="GET"
+                class="flex items-center bg-white border border-[#DFE1E6] rounded-lg">
+                <input type="text" name="q" value="{{ request('q') }}" placeholder="Search habits..."
+                    class="px-4 py-2 text-sm text-[#172B4D] placeholder:text-[#A5ADBA] outline-none">
+                <button type="submit" class="px-3 py-2 bg-[#F4F5F7] border-l border-[#DFE1E6] text-sm rounded-r-md">
+                    Search
+                </button>
+            </form>
+
+            <a href="{{ route('habits.create') }}"
+                class="inline-flex items-center justify-center bg-[#0052CC] hover:bg-[#0747A6] text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all shadow-lg shadow-blue-500/20 active:scale-95">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Create New Habit
+            </a>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

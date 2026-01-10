@@ -4,11 +4,12 @@ use App\Http\Controllers\HabitController;
 use App\Http\Controllers\HabitTaskController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 // 1. GUEST ROUTE: This is what people see if they are NOT logged in
-Route::get('/', function () {
+Route::get('/', function (Request $request) {
     if (auth()->check()) {
-        return app(HabitController::class)->index();
+        return app(HabitController::class)->index($request);
     }
     return view('welcome');
 })->name('habits.index');
