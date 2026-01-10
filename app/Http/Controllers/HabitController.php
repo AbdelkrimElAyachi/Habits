@@ -22,6 +22,13 @@ class HabitController extends Controller
         $completedTasks = \App\Models\Task::whereIn('habit_id', $habitIds)->where('is_complete', true)->count();
         $completionRate = $totalTasks ? (int) round($completedTasks / $totalTasks * 100) : 0;
 
+        // compute per-habit consistency: scale completed/total to 0..10
+        foreach ($habits as $habit) {
+            $total = $habit->tasks()->count();
+            $completed = $habit->tasks()->where('is_complete', true)->count();
+            $habit->consistency = $total ? (int) round($completed / $total * 10) : null; // null when no tasks
+        }
+
         return view('habits.index', [
             'habits' => $habits,
             'totalHabits' => $totalHabits,

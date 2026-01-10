@@ -98,7 +98,7 @@
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h4 class="text-sm font-bold text-[#172B4D] uppercase tracking-widest">About</h4>
+                        <h4 class="text-md font-bold text-[#172B4D] uppercase">About</h4>
                     </div>
 
                     <p class="text-sm text-[#42526E] leading-relaxed mb-8">

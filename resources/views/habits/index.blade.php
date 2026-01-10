@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-extrabold text-[#172B4D] tracking-tight">Dashboard</h1>
+            <h1 class="text-3xl font-extrabold text-[#172B4D]">Dashboard</h1>
             <p class="text-[#5E6C84] mt-1 font-medium">Welcome back! Here is how your routines are looking today.</p>
         </div>
         <a href="{{ route('habits.create') }}"
@@ -105,7 +105,7 @@
                             <div class="w-6 h-6 rounded-full bg-[#36B37E] border-2 border-white"></div>
                         </div>
                         <span class="text-[11px] font-bold text-[#6B778C] uppercase tracking-tighter">Consistency
-                            8/10</span>
+                            {{ $habit->consistency ?? '—' }}/10</span>
                     </div>
 
                     <button
