@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Habit;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class HabitTaskController extends Controller
 {
@@ -17,11 +18,14 @@ class HabitTaskController extends Controller
         // validate
         $request->validate([
             'body' => 'required|string',
-            'time' => 'nullable|date_format:H:i',
+            'due_at' => 'nullable|date_format:Y-m-d\TH:i',
         ]);
 
-        // add task
-        $habit->tasks()->create(['body' => $request->body, 'time' => $request->time]);
+        // add task (store due_at as full datetime string or null)
+        $habit->tasks()->create([
+            'body' => $request->body,
+            'due_at' => $request->due_at ? Carbon::createFromFormat('Y-m-d\TH:i', $request->due_at) : null,
+        ]);
 
         return redirect()->route('habits.show', $habit->id);
     }
@@ -34,7 +38,7 @@ class HabitTaskController extends Controller
         // validate incoming data (allow null body for delete behavior)
         $request->validate([
             'body' => 'nullable|string',
-            'time' => 'nullable|date_format:H:i',
+            'due_at' => 'nullable|date_format:Y-m-d\TH:i',
             'is_complete' => 'sometimes|boolean',
         ]);
 
@@ -45,17 +49,18 @@ class HabitTaskController extends Controller
             return redirect()->route('habits.show', $habit->id);
         }
 
-        // collect changed fields (handle time change even if body didn't change)
+        // collect changed fields (handle due_at change even if body didn't change)
         $updates = [];
 
         if($request->body !== $task->body) {
             $updates['body'] = $request->body;
         }
 
-        if($request->has('time')) {
-            $existingTime = $task->time ? $task->time->format('H:i') : null;
-            if($existingTime !== $request->time) {
-                $updates['time'] = $request->time;
+        if($request->has('due_at')) {
+            $existing = $task->due_at ? $task->due_at->format('Y-m-d\TH:i') : null;
+            $incoming = $request->due_at;
+            if($existing !== $incoming) {
+                $updates['due_at'] = $incoming ? Carbon::createFromFormat('Y-m-d\TH:i', $incoming) : null;
             }
         }
 

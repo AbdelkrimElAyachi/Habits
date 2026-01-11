@@ -6,6 +6,13 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+Route::get('/mail-preview', function () {
+    $notification = new \Illuminate\Auth\Notifications\ResetPassword('test-token');
+    $user = \App\Models\User::first() ?? new \App\Models\User(['email' => 'test@example.com']);
+    
+    return $notification->toMail($user);
+});
+
 // 1. GUEST ROUTE: This is what people see if they are NOT logged in
 Route::get('/', function (Request $request) {
     if (auth()->check()) {

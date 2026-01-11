@@ -40,7 +40,7 @@
                             <input type="text" name="body" placeholder="What needs to be done today?"
                                 autocomplete="off"
                                 class="w-full border-none focus:ring-0 bg-transparent py-5 text-[#172B4D] placeholder:text-[#A5ADBA] text-base font-medium">
-                            <input type="time" name="time"
+                            <input type="datetime-local" name="due_at"
                                 class="ml-3 border-none bg-transparent text-sm text-[#172B4D]" />
                         </div>
                     </form>

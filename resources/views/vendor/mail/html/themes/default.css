@@ -105,8 +105,17 @@ p {
 
 /* Buttons */
 
+/* This targets the <a> tag inside the button */
+.button {
+    color: #ffffff !important; /* Force text to white */
+    text-decoration: none;
+    display: inline-block;
+    -webkit-text-size-adjust: none;
+}
+
+/* Specifically for primary buttons to be extra safe */
 .button-primary {
-    background-color: #0052CC; /* Atlassian Blue */
+    background-color: #0052CC;
     border-top: 12px solid #0052CC;
     border-right: 24px solid #0052CC;
     border-bottom: 12px solid #0052CC;
@@ -114,6 +123,7 @@ p {
     border-radius: 4px;
     font-weight: 600;
     font-size: 14px;
+    color: #ffffff !important; /* Added this line */
 }
 
 /* Subcopy & Footer */
@@ -150,4 +160,24 @@ p {
 .button-error {
     background-color: #FF5630;
     border-color: #FF5630;
+}
+
+.action {
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 100%;
+    margin: 30px auto; /* This adds the vertical space */
+    padding: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.header-link {
+    display: inline-block;
+    color: #0052CC; /* Your SaaS Blue */
+    font-size: 18px;
+    font-weight: 900;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
 }

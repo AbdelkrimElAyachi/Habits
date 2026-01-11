@@ -1,37 +1,36 @@
 <x-mail::message>
-    {{-- Greeting --}}
-    @if (!empty($greeting))
-        # {{ $greeting }}
-    @else
-        @if ($level === 'error')
-            # @lang('Whoops!')
-        @else
-            # @lang('Hello!')
-        @endif
-    @endif
+{{-- Greeting --}}
+@if (! empty($greeting))
+# {{ $greeting }}
+@else
+# Hello!
+@endif
 
-    {{-- Intro Lines --}}
-    @foreach ($introLines as $line)
-        {{ $line }}
-    @endforeach
+{{-- Intro Lines --}}
+@foreach ($introLines as $line)
+{{ $line }}
 
-    {{-- Action Button --}}
-    @isset($actionText)
-        <x-mail::button :url="$actionUrl" color="primary">
-            {{ $actionText }}
-        </x-mail::button>
-    @endisset
+@endforeach
 
-    {{-- Outro Lines --}}
-    @foreach ($outroLines as $line)
-        {{ $line }}
-    @endforeach
+{{-- Action Button --}}
+@isset($actionText)
+<div class="action">
+<x-mail::button :url="$actionUrl" color="primary">
+{{ $actionText }}
+</x-mail::button>
+</div>
+@endisset
 
-    {{-- Salutation --}}
-    @if (!empty($salutation))
-        {{ $salutation }}
-    @else
-        @lang('Regards'),<br>
-        {{ config('app.name') }}
-    @endif
+{{-- Outro Lines --}}
+@foreach ($outroLines as $line)
+{{ $line }}
+
+@endforeach
+
+{{-- Salutation --}}
+@if (! empty($salutation))
+{{ $salutation }}
+@else
+**Best regards,** {{ config('app.name') }}
+@endif
 </x-mail::message>
