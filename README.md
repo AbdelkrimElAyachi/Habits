@@ -171,10 +171,4 @@ Run the test suite: `php artisan test`
 
 This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-----------
-
-## 👨‍💻 Author
-
-**Abdelkrim El Ayachi** — [GitHub Profile](https://www.google.com/search?q=https://github.com/AbdelkrimElAyachi)
-
 **Happy Habit Tracking! 🎯**
