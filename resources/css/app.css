@@ -69,3 +69,21 @@
 @layer utilities {
   .gradient-text { background: linear-gradient(90deg,var(--accent),var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 }
+
+
+/* Force SweetAlert buttons to show their background colors */
+.swal2-actions button.swal2-styled {
+    background-color: var(--swal2-confirm-button-background, #cf2e0a) !important;
+    opacity: 1 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.swal2-actions button.swal2-cancel {
+    background-color: #6e7881 !important; /* Standard gray for cancel */
+}
+
+/* Ensure the popup itself isn't affected by global text-center styles */
+.swal2-container {
+    z-index: 9999;
+}
