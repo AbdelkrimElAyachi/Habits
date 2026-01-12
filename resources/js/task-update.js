@@ -1,77 +1,71 @@
-import axios from "axios"
+import axios from "axios";
 
-// check or uncheck task
-document.querySelectorAll('#task-checkbox').forEach(checkbox => {
-    checkbox.addEventListener('change', e => {
-        // update task
-        updateTask(e)
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Toggle Edit Mode
+    document.querySelectorAll('.edit-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const container = e.target.closest('.task-container');
+            container.querySelector('.task-display').classList.add('hidden');
+            container.querySelector('.task-edit-form').classList.remove('hidden');
+        });
+    });
 
-    })
-})
+    // 2. Cancel Edit Mode
+    document.querySelectorAll('.cancel-edit-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const container = e.target.closest('.task-container');
+            container.querySelector('.task-display').classList.remove('hidden');
+            container.querySelector('.task-edit-form').classList.add('hidden');
+        });
+    });
 
-// when hit enter from task input, Update
-document.querySelectorAll('#taskUpdateForm input[type="text"]').forEach(input => {
-    input.addEventListener('keydown', e => {
-        // when press enter
-        if(e.key === 'Enter') {
-            // prevent reload when the user hit enter
-            e.preventDefault()
-            // update task
-            updateTask(e)
-        }
+    // 3. Handle Form Submission (Save Button)
+    document.querySelectorAll('.task-edit-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
 
-    })
-})
+            axios.patch(this.action, data)
+                .then(() => window.location.reload())
+                .catch(err => console.error(err));
+        });
+    });
 
-// reusable utils function
-function updateTask(e) {
-    const form = e.currentTarget.closest('form')
-    const formData = new FormData(form)
+    // 4. Handle Auto-Submit for Checkbox (Marking as complete)
+    document.querySelectorAll('.task-auto-submit').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            const container = e.target.closest('.task-container');
+            const taskId = container.dataset.taskId;
+            // Since the checkbox might be outside the actual form now, 
+            // we send a standalone request
+            axios.patch(`/tasks/${taskId}/toggle`, { // You may need to adjust this route
+                is_complete: e.target.checked
+            }).then(() => window.location.reload());
+        });
+    });
 
-    const data = Object.fromEntries(formData.entries())
+    // Add this to your task-update.js
+    document.querySelectorAll('.task-status-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const url = this.getAttribute('data-url');
+            const isCompleted = this.checked ? 1 : 0;
 
-    // form has @method('PATCH) => _method="PATCH"  so it's typically patch request,
-    axios.post(form.action, data).then(res => {
-        if(res.status === 200) {
-            location.reload()
-        }
-    })
-}
-
-// attach to all inline task update forms (they share id 'taskUpdateForm')
-document.querySelectorAll('form#taskUpdateForm').forEach(form => {
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const action = form.getAttribute('action');
-
-        const bodyEl = form.querySelector('input[name="body"]');
-        const isCompleteEl = form.querySelector('input[name="is_complete"]');
-        const dueAtEl = form.querySelector('input[name="due_at"]');
-
-        const payload = {
-            body: bodyEl ? bodyEl.value : '',
-            // send boolean as 1/0 or true/false depending on backend
-            is_complete: isCompleteEl ? (isCompleteEl.checked ? 1 : 0) : undefined,
-            due_at: dueAtEl ? dueAtEl.value : null,
-        };
-
-        axios.patch(action, payload)
-            .then(() => {
-                // refresh to reflect updated due_at in the list
-                window.location.reload();
+            // Send just the completion status to the server
+            axios.patch(url, {
+                is_complete: isCompleted,
+                // We send the existing body so validation doesn't fail
+                body: this.closest('.task-container').querySelector('p').innerText 
+            })
+            .then(res => {
+                // Optional: You can reload or just toggle a CSS class for the "line-through"
+                window.location.reload(); 
             })
             .catch(err => {
-                console.error('Failed to update task', err);
-                // optionally show feedback to user
+                console.error('Failed to update status', err);
+                // Revert the checkbox if the server fails
+                this.checked = !this.checked;
             });
-    });
-});
-
-// keep compatibility: if forms are updated via checkbox clicks, also handle change on checkbox
-document.querySelectorAll('form#taskUpdateForm input[name="is_complete"]').forEach(cb => {
-    cb.addEventListener('change', function (e) {
-        const form = e.currentTarget.closest('form');
-        if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+        });
     });
 });
