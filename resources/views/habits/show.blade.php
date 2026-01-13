@@ -22,34 +22,61 @@
     <div class="flex flex-col lg:flex-row gap-10">
         <div class="flex-grow lg:w-2/3 space-y-10">
 
-            <section>
-                <div class="flex items-center mb-3">
-                    <h3 class="text-[11px] font-bold text-[#6B778C] uppercase tracking-[0.15em]">Quick Add Task</h3>
-                </div>
-                <div
-                    class="bg-white border-2 border-[#DFE1E6] rounded-xl focus-within:border-[#4C9AFF] focus-within:shadow-lg focus-within:shadow-blue-500/10 transition-all overflow-hidden group">
+        <section>
+            <div class="flex items-center mb-3">
+                <p class="text-[14px] font-bold text-[#6B778C] uppercase">Quick Add Task</p>
+            </div>
+            
+            <div class="space-y-2">
+                <div class="bg-white border-2 {{ $errors->has('body') || $errors->has('due_at') ? 'border-[#DE350B]' : 'border-[#DFE1E6]' }} rounded-xl focus-within:border-[#4C9AFF] focus-within:shadow-lg focus-within:shadow-blue-500/10 transition-all overflow-hidden group">
                     <form action="{{ route('tasks.store', $habit->id) }}" method="POST">
                         @csrf
                         <div class="flex items-center px-4">
-                            <span class="text-[#A5ADBA] group-focus-within:text-[#4C9AFF]">
+                            <button type="submit" class="text-[#A5ADBA] flex items-center group-focus-within:text-[#4C9AFF] hover:text-[#0052CC] transition-all group/add">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
-                            </span>
-                            <input type="text" name="body" placeholder="What needs to be done today?"
+                                <span class="text-[10px] font-bold uppercase hidden group-hover/add:block">Add</span>
+                            </button>
+                            
+                            {{-- Input with old() value --}}
+                            <input type="text" name="body" 
+                                value="{{ old('body') }}"
+                                placeholder="What needs to be done today?"
                                 autocomplete="off"
                                 class="w-full border-none focus:ring-0 bg-transparent py-5 text-[#172B4D] placeholder:text-[#A5ADBA] text-base font-medium">
+                            
+                            {{-- Datetime with old() value --}}
                             <input type="datetime-local" name="due_at"
+                                value="{{ old('due_at') }}"
                                 class="ml-3 border-none bg-transparent text-sm text-[#172B4D]" />
                         </div>
                     </form>
                 </div>
-            </section>
+
+                {{-- Error Messages Display --}}
+                @if ($errors->has('body') || $errors->has('due_at'))
+                    <div class="flex flex-col space-y-1 ml-2">
+                        @error('body')
+                            <span class="text-[14px] font-bold text-[#DE350B] flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                                The "Task" field is required.
+                            </span>
+                        @enderror
+                        @error('due_at')
+                            <span class="text-[14px] font-bold text-[#DE350B] flex items-center">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                                THe "date" field is required.
+                            </span>
+                        @enderror
+                    </div>
+                @endif
+            </div>
+        </section>
 
             <section>
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-[11px] font-bold text-[#6B778C] uppercase tracking-[0.15em]">Tasks to Complete</h3>
+                    <p class="text-[14px] font-bold text-[#6B778C] uppercase">Tasks to Complete</p>
                     <span
                         class="px-2 py-0.5 bg-[#DEEBFF] text-[#0052CC] text-[10px] font-bold rounded-full">{{ count($incompletedTasks) }}</span>
                 </div>
@@ -100,7 +127,7 @@
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
-                        <h4 class="text-md font-bold text-[#172B4D] uppercase">About</h4>
+                        <p class="text-md font-bold text-[#172B4D] uppercase">About</p>
                     </div>
 
                     <p class="text-sm text-[#42526E] leading-relaxed mb-8">
@@ -121,7 +148,7 @@
 
             <div class="bg-white border border-[#DFE1E6] rounded-2xl shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b border-[#DFE1E6] bg-[#FAFBFC] flex items-center justify-between">
-                    <h4 class="text-xs font-bold text-[#172B4D] uppercase tracking-widest">Log</h4>
+                    <p class="text-xs font-bold text-[#172B4D] uppercase tracking-widest">Log</p>
                     <span class="text-[10px] text-[#A5ADBA] font-bold uppercase">{{ count($habit->activities) }}
                         Events</span>
                 </div>

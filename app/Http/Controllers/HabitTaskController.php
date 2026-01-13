@@ -12,14 +12,13 @@ class HabitTaskController extends Controller
 
     public function store(Request $request, Habit $habit)
     {
+        $request->validate([
+            'body' => 'required|string|min:1',
+            'due_at' => 'required|date_format:Y-m-d\TH:i', // Now required
+        ]);
+
         // authorize
         $this->authorize('manage', $habit);
-
-        // validate
-        $request->validate([
-            'body' => 'required|string',
-            'due_at' => 'nullable|date_format:Y-m-d\TH:i',
-        ]);
 
         // add task (store due_at as full datetime string or null)
         $habit->tasks()->create([
@@ -41,13 +40,6 @@ class HabitTaskController extends Controller
             'due_at' => 'nullable|date_format:Y-m-d\TH:i',
             'is_complete' => 'sometimes|boolean',
         ]);
-
-        // if body has no text, delete task
-        if(!$request->body || strlen($request->body) === 0) {
-            $task->delete();
-
-            return redirect()->route('habits.show', $habit->id);
-        }
 
         // collect changed fields (handle due_at change even if body didn't change)
         $updates = [];
@@ -90,4 +82,14 @@ class HabitTaskController extends Controller
         }
     }
 
+    // Dedicated Delete Method
+    public function destroy(Habit $habit, Task $task)
+    {
+        $this->authorize('manage', $habit);
+        
+        $task->delete();
+
+        return redirect()->route('habits.show', $habit->id)
+                        ->with('message', 'Task deleted');
+    }
 }

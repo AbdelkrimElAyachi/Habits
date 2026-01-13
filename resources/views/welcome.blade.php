@@ -128,8 +128,8 @@
             </div>
             <p class="text-sm text-[#6B778C]">© {{ date('Y') }} HabitApp. Built for high performers.</p>
             <div class="flex space-x-6">
-                <a href="#" class="text-sm text-[#6B778C] hover:text-[#0052CC]">Privacy</a>
-                <a href="#" class="text-sm text-[#6B778C] hover:text-[#0052CC]">Terms</a>
+                <a href="{{ route('privacy')  }}" class="text-sm text-[#6B778C] hover:text-[#0052CC]">Privacy</a>
+                <a href="{{ route('terms')  }}" class="text-sm text-[#6B778C] hover:text-[#0052CC]">Terms</a>
             </div>
         </div>
     </footer>
