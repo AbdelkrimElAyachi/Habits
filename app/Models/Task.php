@@ -16,6 +16,7 @@ class Task extends Model
     protected $casts = [
         'is_complete' => 'boolean',
         'due_at' => 'datetime',
+        'finished_at' => 'datetime'
     ];
 
     public function habit(): BelongsTo
@@ -42,6 +43,7 @@ class Task extends Model
     {
         $this->update([
             'is_complete' => true,
+            'finished_at' => now(),
         ]);
 
         $this->trackActivity('completed_task');
