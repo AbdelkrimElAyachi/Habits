@@ -80,6 +80,16 @@
                     </div>
 
                     <div>
+                        <label for="phone"
+                            class="block text-xs font-bold text-gray-700 uppercase mb-1 tracking-wide">
+                            Phone Number</label>
+                        <input id="phone" type="phone" name="phone" :value="old('phone')" required
+                            class="w-full px-4 py-2.5 bg-[#f4f5f7] border-2 border-[#dfe1e6] rounded-lg focus:bg-white focus:border-[#4c9aff] focus:ring-0 transition-all text-sm outline-none placeholder:text-gray-400"
+                            placeholder="06XXXXXXXX">
+                        <x-input-error :messages="$errors->get('phone')" class="mt-1" />
+                    </div>
+
+                    <div>
                         <label for="password"
                             class="block text-xs font-bold text-gray-700 uppercase mb-1 tracking-wide">Password</label>
                         <input id="password" type="password" name="password" required

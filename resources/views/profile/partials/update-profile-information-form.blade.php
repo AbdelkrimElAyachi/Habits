@@ -32,6 +32,14 @@
                 class="w-full px-3 py-2 bg-[#F4F5F7] border-2 border-[#DFE1E6] rounded-md focus:bg-white focus:border-[#4C9AFF] focus:ring-0 transition-all text-sm outline-none text-[#172B4D]"
                 value="{{ old('email', $user->email) }}" required />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <br/>
+            <br/>
+            <label class="block text-xs font-bold text-[#42526E] uppercase tracking-wide mb-1" for="email">
+                Phone Number</label>
+            <input id="phone" name="phone" type="text"
+                class="w-full px-3 py-2 bg-[#F4F5F7] border-2 border-[#DFE1E6] rounded-md focus:bg-white focus:border-[#4C9AFF] focus:ring-0 transition-all text-sm outline-none text-[#172B4D]"
+                value="{{ old('phone', $user->phone) }}" required />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !$user->hasVerifiedEmail())
                 <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">

@@ -152,37 +152,36 @@ class HabitController extends Controller
             })
             ->get();
 
-        foreach ($tasks as $task) {
-            foreach ($data as $key => &$bucket) {
-                $targetDate = $bucket['timestamp'];
+            foreach ($tasks as $task) {
+                foreach ($data as $key => &$bucket) {
+                    $targetDate = $bucket['timestamp'];
 
-                $isSamePeriod = match($view) {
-                    'week'  => ($task->finished_at?->isSameWeek($targetDate) || $task->due_at?->isSameWeek($targetDate)),
-                    'month' => ($task->finished_at?->isSameMonth($targetDate) || $task->due_at?->isSameMonth($targetDate)),
-                    default => ($task->finished_at?->isSameDay($targetDate) || $task->due_at?->isSameDay($targetDate)),
-                };
+                    // Vérification simplifiée de la période
+                    $matchCompleted = $task->is_complete && $task->finished_at && match($view) {
+                        'week'  => $task->finished_at->isSameWeek($targetDate),
+                        'month' => $task->finished_at->isSameMonth($targetDate),
+                        default => $task->finished_at->isSameDay($targetDate),
+                    };
 
-                if ($isSamePeriod) {
-                    if ($task->is_complete && $task->finished_at) {
-                        $matchCompleted = match($view) {
-                            'week'  => $task->finished_at->isSameWeek($targetDate),
-                            'month' => $task->finished_at->isSameMonth($targetDate),
-                            default => $task->finished_at->isSameDay($targetDate),
-                        };
-                        if ($matchCompleted) $bucket['completed']++;
+                    if ($matchCompleted) {
+                        $bucket['completed']++;
+                        continue; // Une tâche complétée ne peut pas être manquée
                     }
 
-                    if (!$task->is_complete && $task->due_at && $task->due_at->isPast()) {
-                        $matchMissed = match($view) {
-                            'week'  => $task->due_at->isSameWeek($targetDate),
-                            'month' => $task->due_at->isSameMonth($targetDate),
-                            default => $task->due_at->isSameDay($targetDate),
-                        };
-                        if ($matchMissed) $bucket['missed']++;
+                    // Pour "Missed", on regarde si la tâche était DUE dans cette période et non complétée
+                    $isDueInPeriod = match($view) {
+                        'week'  => $task->due_at?->isSameWeek($targetDate),
+                        'month' => $task->due_at?->isSameMonth($targetDate),
+                        default => $task->due_at?->isSameDay($targetDate),
+                    };
+
+                    if (!$task->is_complete && $isDueInPeriod) {
+                        // Optionnel: n'afficher comme "missed" que si la journée est passée 
+                        // ou si vous voulez voir les tâches du jour en "missed" par défaut
+                        $bucket['missed']++;
                     }
                 }
             }
-        }
 
         return array_map(function($item) {
             unset($item['timestamp']);

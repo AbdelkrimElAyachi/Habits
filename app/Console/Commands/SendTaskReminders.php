@@ -7,12 +7,16 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\Task;
 use App\Notifications\TaskReminderNotification; // Check for typos here!
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class SendTaskReminders extends Command
 {
     protected $signature = 'tasks:send-reminders {--minutes=60 : Lookahead window in minutes}';
     protected $description = 'Send reminders for tasks that are due soon';
 
+    
     public function handle()
     {
         // Find your admin or a dedicated system user
@@ -28,15 +32,15 @@ class SendTaskReminders extends Command
 
         // To avoid DB timezone mismatches we fetch a broader range from DB then filter in PHP.
         // Fetch tasks due roughly within yesterday..tomorrow to keep dataset small but safe.
-        $fromDb = $nowApp->copy()->subDay()->toDateTimeString();
-        $toDb = $untilApp->copy()->addDay()->toDateTimeString();
+        $fromDbString = $nowApp->toDateTimeString();
+        $toDbString = $untilApp->toDateTimeString();
 
-        $this->info("Querying DB for tasks with due_at between {$fromDb} and {$toDb} (broad window).");
+        $this->info("Querying DB for tasks with due_at between {$fromDbString} and {$toDbString} (broad window).");
 
         $tasks = Task::with(['habit.user', 'activities'])
             ->where('is_complete', false)
             ->whereNotNull('due_at')
-            ->whereBetween('due_at', [$fromDb, $toDb])
+            ->whereBetween('due_at', [$fromDbString, $toDbString])
             ->get();
 
         $this->info('Found ' . $tasks->count() . ' candidate task(s) from DB; applying precise app-time window check.');
@@ -84,4 +88,6 @@ class SendTaskReminders extends Command
 
         return 0;
     }
+    
+
 }
